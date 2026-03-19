@@ -1,0 +1,49 @@
+| Component        | Arduino Pin | Description                   |
+| ---------------- | ----------- | ----------------------------- |
+| MQ-3 Digital OUT | D2          | Digital signal (optional use) |
+| MQ-3 Analog OUT  | A1          | Main alcohol detection input  |
+| LED (+)          | D3          | Through resistor (220Ω–1kΩ)   |
+| Buzzer (+)       | D4          | Active buzzer recommended     |
+| MQ-3 VCC         | 5V          | Power supply                  |
+| MQ-3 GND         | GND         | Ground                        |
+| LED (-)          | GND         | Ground                        |
+| Buzzer (-)       | GND         | Ground                        |
+
+
+-----CODE----
+
+#define sensorDigital 2
+#define LED 3
+#define buzzer 4
+#define sensorAnalog A1
+
+int threshold = 400;  // is value ke upar alcohol detect maana jaayega
+
+void setup() {
+  pinMode(sensorDigital, INPUT);
+  pinMode(LED, OUTPUT);
+  pinMode(buzzer, OUTPUT);
+  Serial.begin(9600);
+}
+
+void loop() {
+  bool digital = digitalRead(sensorDigital);
+  int analog = analogRead(sensorAnalog);
+
+  Serial.print("Analog value : ");
+  Serial.print(analog);
+  Serial.print("\t");
+  Serial.print("Digital value : ");
+  Serial.println(digital);
+
+  // Sirf analog value ka use karke detection karte hain
+  if (analog > threshold) {
+    digitalWrite(LED, HIGH);
+    digitalWrite(buzzer, HIGH);
+  } else {
+    digitalWrite(LED, LOW);
+    digitalWrite(buzzer, LOW);
+  }
+
+  delay(200); // thoda delay diya taaki stability mile
+}
